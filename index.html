@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Integration Management Office (IMO) | Framework</title>
+  <meta name="description" content="How I think about the role of an Integration Management Office (IMO)." />
+
+  <style>
+    :root{
+      /* Brand-inspired palette (Unison-like navy + teal + light aqua) */
+      --navy: #174E72;          /* deep blue from logo */
+      --navy-2: #2E688C;        /* mid blue */
+      --teal: #27ABD0;          /* bright teal */
+      --aqua: #A4DAE9;          /* light aqua */
+      --ink: #0B1220;           /* near-black */
+      --muted: #5B6B7C;         /* muted text */
+      --bg: #F6FBFD;            /* soft background */
+      --card: #FFFFFF;          /* card background */
+      --border: rgba(23, 78, 114, 0.14);
+      --shadow: 0 10px 30px rgba(11, 18, 32, 0.08);
+      --radius: 18px;
+      --max: 980px;
+    }
+
+    *{ box-sizing: border-box; }
+    html, body{ height: 100%; }
+    body{
+      margin: 0;
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--ink);
+      background:
+        radial-gradient(1200px 600px at 10% -10%, rgba(39,171,208,0.20), transparent 60%),
+        radial-gradient(1000px 500px at 90% 0%, rgba(164,218,233,0.30), transparent 55%),
+        var(--bg);
+      line-height: 1.5;
+    }
+
+    a{ color: var(--navy); text-decoration: none; }
+    a:hover{ text-decoration: underline; }
+
+    .wrap{
+      max-width: var(--max);
+      margin: 0 auto;
+      padding: 44px 18px 72px;
+    }
+
+    /* Top banner */
+    .hero{
+      position: relative;
+      background: linear-gradient(135deg, var(--navy) 0%, var(--navy-2) 60%, rgba(39,171,208,0.95) 120%);
+      color: #fff;
+      border-radius: calc(var(--radius) + 6px);
+      padding: 34px 26px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .hero:before{
+      content:"";
+      position: absolute;
+      inset: -80px -120px auto auto;
+      width: 260px;
+      height: 260px;
+      background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.25), rgba(255,255,255,0) 70%);
+      transform: rotate(12deg);
+    }
+    .badge{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.14);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-weight: 600;
+      letter-spacing: 0.2px;
+      font-size: 13px;
+    }
+    .dot{
+      width: 9px; height: 9px; border-radius: 999px;
+      background: var(--teal);
+      box-shadow: 0 0 0 4px rgba(39,171,208,0.20);
+    }
+    h1{
+      margin: 14px 0 6px;
+      font-size: clamp(26px, 3.2vw, 38px);
+      line-height: 1.15;
+      letter-spacing: -0.4px;
+    }
+    .subtitle{
+      margin: 0;
+      max-width: 74ch;
+      font-size: 16px;
+      opacity: 0.95;
+    }
+
+    /* Content layout */
+    .grid{
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 18px;
+      margin-top: 18px;
+    }
+    @media (max-width: 880px){
+      .grid{ grid-template-columns: 1fr; }
+    }
+
+    .card{
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 18px;
+      box-shadow: 0 8px 24px rgba(11,18,32,0.05);
+    }
+    .card h2{
+      margin: 0 0 12px;
+      font-size: 18px;
+      letter-spacing: -0.2px;
+    }
+    .card h3{
+      margin: 18px 0 8px;
+      font-size: 16px;
+    }
+
+    .callout{
+      border-left: 4px solid var(--teal);
+      padding: 10px 12px;
+      background: linear-gradient(90deg, rgba(39,171,208,0.10), rgba(39,171,208,0.03));
+      border-radius: 12px;
+      margin-top: 12px;
+    }
+    .callout strong{ color: var(--navy); }
+
+    ul{
+      margin: 10px 0 0;
+      padding-left: 18px;
+    }
+    li{ margin: 8px 0; color: var(--ink); }
+    li span{ color: var(--muted); }
+
+    .pillrow{
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+    .pill{
+      padding: 8px 10px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(164,218,233,0.25);
+      color: var(--navy);
+      font-weight: 600;
+      font-size: 12.5px;
+    }
+
+    .section-title{
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 18px;
+      margin-bottom: 8px;
+    }
+    .section-title h2{ margin: 0; }
+    .hint{
+      font-size: 12.5px;
+      color: var(--muted);
+    }
+
+    .pillars{
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 14px;
+      margin-top: 12px;
+    }
+    @media (max-width: 760px){
+      .pillars{ grid-template-columns: 1fr; }
+    }
+
+    .pillar{
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, rgba(39,171,208,0.06), rgba(255,255,255,0.0) 60%);
+      padding: 16px 16px 14px;
+    }
+    .pillar .kicker{
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .icon{
+      width: 28px; height: 28px; border-radius: 10px;
+      display: grid; place-items: center;
+      background: rgba(39,171,208,0.14);
+      border: 1px solid rgba(39,171,208,0.20);
+      color: var(--navy);
+      font-weight: 900;
+    }
+    .footer{
+      margin-top: 18px;
+      color: var(--muted);
+      font-size: 13px;
+      text-align: center;
+    }
+    .footer strong{ color: var(--navy); }
+  </style>
+</head>
+
+<body>
+  <main class="wrap">
+    <section class="hero" aria-label="IMO Framework Header">
+      <div class="badge"><span class="dot"></span> Integration Management Office (IMO)</div>
+      <h1>How I Think About the Role of an Integration Management Office</h1>
+      <p class="subtitle">
+        <strong>IMO’s purpose:</strong> Create a repeatable, scalable way to integrate acquisitions—without overloading
+        functional teams or disrupting clinical delivery.
+      </p>
+    </section>
+
+    <section class="grid" aria-label="IMO Summary Grid">
+      <article class="card">
+        <div class="section-title">
+          <h2>Keys to IMO Success</h2>
+        </div>
+        <ul>
+          <li><strong>Leadership alignment</strong> on what the IMO owns vs. what functions own.</li>
+          <li><strong>Early engagement</strong>, ideally starting at the <strong>LOI stage</strong>, to assess integration complexity and readiness.</li>
+          <li><strong>Lightweight governance</strong> that enables prioritization and fast decision-making.</li>
+          <li><strong>Executive sponsorship</strong> to convene cross-functional “tiger teams” when needed.</li>
+          <li><strong>Shared accountability</strong> for integration success between IMO, functional leaders, and the acquired company.</li>
+        </ul>
+
+        <div class="callout">
+          <strong>Guiding principle:</strong> Stabilize first, standardize next, optimize continuously.
+        </div>
+      </article>
+
+    </section>
+
+    <section class="card" aria-label="IMO Pillars Detail" style="margin-top:18px">
+      <div class="section-title">
+        <h2>IMO Pillars</h2>
+
+      <div class="pillars">
+        <div class="pillar">
+          <div class="kicker"><span class="icon">1</span> Business-Level Alignment</div>
+          <ul>
+            <li><strong>Prioritization criteria:</strong> <span>Balance deal urgency, business impact, capacity, and interdependencies.</span></li>
+            <li><strong>Strategic alignment:</strong> <span>Ensure each acquisition supports Unison’s growth strategy and operating model.</span></li>
+            <li><strong>Leadership alignment:</strong> <span>Clarify what the integration means for Clinical Ops, HR, Finance, IT, etc.</span></li>
+            <li><strong>Success metrics:</strong> <span>Define KPIs upfront (stability, adoption, efficiency, retention).</span></li>
+          </ul>
+        </div>
+
+        <div class="pillar">
+          <div class="kicker"><span class="icon">2</span> Deal-Level Execution</div>
+          <ul>
+            <li><strong>Governance:</strong> <span>Clear reporting structure, escalation paths, and decision rights.</span></li>
+            <li><strong>Roles & responsibilities:</strong> <span>Simple RACI across IMO and functions.</span></li>
+            <li><strong>Stakeholder mapping:</strong> <span>Identify high-impact and high-risk groups early.</span></li>
+            <li><strong>Operating rhythm:</strong> <span>Predictable cadence for updates, decisions, and issue resolution.</span></li>
+          </ul>
+        </div>
+
+        <div class="pillar">
+          <div class="kicker"><span class="icon">3</span> Process Integration</div>
+          <ul>
+            <li><strong>Current-state mapping:</strong> <span>Identify critical processes, dependencies, and variation.</span></li>
+            <li><strong>Future-state design:</strong> <span>Standardize where it creates value; preserve flexibility where clinically necessary.</span></li>
+          </ul>
+        </div>
+
+        <div class="pillar">
+          <div class="kicker"><span class="icon">4</span> Technology & Data</div>
+          <ul>
+            <li><strong>Systems assessment:</strong> <span>Evaluate HR, finance, scheduling, and clinical systems.</span></li>
+            <li><strong>Integration approach:</strong> <span>Define what migrates, what integrates, and what sunsets.</span></li>
+            <li><strong>Data readiness:</strong> <span>Address quality, ownership, and reporting early.</span></li>
+          </ul>
+        </div>
+
+        <div class="pillar" style="grid-column: 1 / -1;">
+          <div class="kicker"><span class="icon">5</span> People & Adoption</div>
+          <ul>
+            <li><strong>Change & communication:</strong> <span>Clear, role-based messaging that explains why and what changes.</span></li>
+            <li><strong>Training:</strong> <span>Lean, in-the-flow learning for new processes and systems.</span></li>
+            <li><strong>Knowledge management:</strong> <span>Single source of truth for integration materials.</span></li>
+            <li><strong>Recognition:</strong> <span>Reinforce integration success through visible acknowledgment, not just metrics.</span></li>
+          </ul>
+        </div>
+      </div>
+
+      <p class="footer">
+        Created By: Amar Chokshi
+      </p>
+    </section>
+  </main>
+</body>
+</html>
